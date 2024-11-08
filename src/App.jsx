@@ -51,7 +51,7 @@ function App() {
   const [count, setCount] = useState(0)
   const [player1Score, setPlayer1Score] = useState(0)
   const [player2Score, setPlayer2Score] = useState(0)
-  const [audio, setAudio] = useState("off")
+  const [audio, setAudio] = useState("on")
   const [playerTurn, setPlayerTurn] = useState("one")
 
   const audioRef = useRef(new Audio(backgroundMusic));
