@@ -113,7 +113,7 @@ function App() {
     };
   }, []);
 
- 
+
 
 
   const changePage = (type) => {
@@ -191,7 +191,7 @@ function App() {
     }
   }, [winner])
 
- 
+
 
   const playAudio = () => {
     if (audio !== "off") {
@@ -211,6 +211,7 @@ function App() {
     const gameResult = checkWinner(newBoard);
     if (gameResult[0]) {
       setTime(0)
+      console.log(gameResult[0])
       setWinnerPosition(gameResult[1])
       setWinner(gameResult[0]);
       return;
@@ -260,6 +261,7 @@ function App() {
   const resetGame = () => {
     playAudio()
     setTime(8)
+    setWinnerPosition(null)
     setBoard(EMPTY_BOARD);
     setIsPlayerTurn(true);
     setPlayerTurn("one")
@@ -281,7 +283,6 @@ function App() {
           if (gameResult[0]) {
             setTime(0)
             setWinnerPosition(gameResult[1])
-
             setWinner(gameResult[0]);
           } else {
             setTime(8)
@@ -308,9 +309,9 @@ function App() {
                   <div onClick={changeAudio} className='speaker-button'>
                     {
                       audio == "off" ?
-                        <i class="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
+                        <i className="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
                         :
-                        <i class="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
+                        <i className="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
                     }
                   </div>
                 </div>
@@ -340,14 +341,14 @@ function App() {
                 <div className='w-[320px] h-full m-auto flex flex-col justify-between'>
                   <div className='flex justify-between items-center mb-[40px]'>
                     <div onClick={() => goBack("Home")} className='back-button'>
-                      <i class="fa-solid fa-arrow-left text-[#b7c5d5] text-[25px]"></i>
+                      <i className="fa-solid fa-arrow-left text-[#b7c5d5] text-[25px]"></i>
                     </div>
                     <div onClick={changeAudio} className='speaker-button'>
                       {
                         audio == "off" ?
-                          <i class="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
+                          <i className="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
                           :
-                          <i class="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
+                          <i className="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
                       }
                     </div>
                   </div>
@@ -419,7 +420,7 @@ function App() {
                     <div className='flex justify-between items-center mb-[40px]'>
 
                       <div onClick={() => goBack("Home")} className='back-button'>
-                        <i class="fa-solid fa-arrow-left text-[#b7c5d5] text-[25px]"></i>
+                        <i className="fa-solid fa-arrow-left text-[#b7c5d5] text-[25px]"></i>
                       </div>
                       {winner && (
 
@@ -440,9 +441,9 @@ function App() {
                       <div onClick={changeAudio} className='speaker-button'>
                         {
                           audio == "off" ?
-                            <i class="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
+                            <i className="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
                             :
-                            <i class="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
+                            <i className="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
                         }
                       </div>
                     </div>
@@ -479,7 +480,7 @@ function App() {
 
                               handleMultiplayer(i)
 
-                            }} class={`${cell != null ? "box-after" : "box-before"}`}>
+                            }} className={`${cell != null ? "box-after" : "box-before"}`}>
                               {
                                 cell == "X" ?
                                   <img src="X.png" className='img' alt="" />
@@ -494,32 +495,48 @@ function App() {
                               }
                             </div>
                             :
-                            <div key={i} onClick={() => {
-
-                              handleMultiplayer(i)
-
-                            }} class={`${cell != null && winnerPosition.includes(i)
-                                ?
-                                cell == "X" ?
-                                  "box-after-win-X"
-                                  :
-                                  "box-after-win-O"
-                                :
-                                cell != null ? "box-after" : "box-before"
-                              }`}>
-                              {
-                                cell == "X" ?
-                                  <img src="X.png" className='img' alt="" />
-                                  :
-                                  cell == "O"
-                                    ?
-                                    <img src="O.png" className='img' alt="" />
+                            winnerPosition ?
+                                <div key={i} className={`${cell != null && winnerPosition.includes(i)
+                                  ?
+                                  cell == "X" ?
+                                    "box-after-win-X"
                                     :
-                                    null
+                                    "box-after-win-O"
+                                  :
+                                  cell != null ? "box-after" : "box-before"
+                                  }`}>
+                                  {
+                                    cell == "X" ?
+                                      <img src="X.png" className='img' alt="" />
+                                      :
+                                      cell == "O"
+                                        ?
+                                        <img src="O.png" className='img' alt="" />
+                                        :
+                                        null
 
 
-                              }
-                            </div>
+                                  }
+                                </div>
+                                :
+                                <div key={i} onClick={() => {
+                                  if (isPlayerTurn) {
+
+                                    handleClick(i)
+                                  }
+
+                                }} className={`${cell != null ? "box-after" : "box-before"}`}>
+                                  {
+                                    cell == "X" ?
+                                      <img src="X.png" className='img' alt="" />
+                                      :
+                                      cell == "O"
+                                        ?
+                                        <img src="O.png" className='img' alt="" />
+                                        :
+                                        null
+                                  }
+                                </div>
                         ))}
                       </div>
                     </div>
@@ -563,7 +580,7 @@ function App() {
                       <div className='flex justify-between items-center mb-[40px]'>
 
                         <div onClick={() => goBack("Selection")} className='back-button'>
-                          <i class="fa-solid fa-arrow-left text-[#b7c5d5] text-[25px]"></i>
+                          <i className="fa-solid fa-arrow-left text-[#b7c5d5] text-[25px]"></i>
                         </div>
                         {winner && (
 
@@ -584,9 +601,9 @@ function App() {
                         <div onClick={changeAudio} className='speaker-button'>
                           {
                             audio == "off" ?
-                              <i class="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
+                              <i className="fa-solid fa-volume-xmark text-[#b7c5d5] text-[20px]"></i>
                               :
-                              <i class="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
+                              <i className="fa-solid fa-volume-high text-[#b7c5d5] text-[20px]"></i>
                           }
                         </div>
                       </div>
@@ -625,7 +642,7 @@ function App() {
                                   handleClick(i)
                                 }
 
-                              }} class={`${cell != null ? "box-after" : "box-before"}`}>
+                              }} className={`${cell != null ? "box-after" : "box-before"}`}>
                                 {
                                   cell == "X" ?
                                     <img src="X.png" className='img' alt="" />
@@ -635,16 +652,11 @@ function App() {
                                       <img src="O.png" className='img' alt="" />
                                       :
                                       null
-
-
                                 }
                               </div>
                               :
-                              <div key={i} onClick={() => {
-
-                                handleClick(i)
-
-                              }} class={`${cell != null && winner != "Tie" && winnerPosition.includes(i)
+                              winnerPosition ?
+                                <div key={i} className={`${cell != null && winnerPosition.includes(i)
                                   ?
                                   cell == "X" ?
                                     "box-after-win-X"
@@ -652,20 +664,39 @@ function App() {
                                     "box-after-win-O"
                                   :
                                   cell != null ? "box-after" : "box-before"
-                                }`}>
-                                {
-                                  cell == "X" ?
-                                    <img src="X.png" className='img' alt="" />
-                                    :
-                                    cell == "O"
-                                      ?
-                                      <img src="O.png" className='img' alt="" />
+                                  }`}>
+                                  {
+                                    cell == "X" ?
+                                      <img src="X.png" className='img' alt="" />
                                       :
-                                      null
+                                      cell == "O"
+                                        ?
+                                        <img src="O.png" className='img' alt="" />
+                                        :
+                                        null
 
 
-                                }
-                              </div>
+                                  }
+                                </div>
+                                :
+                                <div key={i} onClick={() => {
+                                  if (isPlayerTurn) {
+
+                                    handleClick(i)
+                                  }
+
+                                }} className={`${cell != null ? "box-after" : "box-before"}`}>
+                                  {
+                                    cell == "X" ?
+                                      <img src="X.png" className='img' alt="" />
+                                      :
+                                      cell == "O"
+                                        ?
+                                        <img src="O.png" className='img' alt="" />
+                                        :
+                                        null
+                                  }
+                                </div>
                           ))}
                         </div>
                       </div>
