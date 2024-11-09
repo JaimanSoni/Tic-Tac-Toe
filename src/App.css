@@ -79,7 +79,11 @@
   font-weight: 500;
   font-size: 16px;
   letter-spacing: 0.3px;
-
+}
+.footer-text {
+  color: #90a5bb;
+  font-size: 13px;
+  letter-spacing: 0.3px;
 }
 
 .restart-btn {
@@ -155,6 +159,29 @@
   box-shadow: inset 2px 2px 3px #d7e0ea92;
   background-image: linear-gradient(to top left, #d0d9e539, #ffffff);
 }
+.box-after-win-X {
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  background-color: #4f6da8;
+  box-shadow: inset 4px 4px 10px #464646d2;
+}
+.box-after-win-O {
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  background-color: #CF4B47;
+  box-shadow: inset 4px 4px 10px #5a5a5a6d;
+}
+
 
 @keyframes scale {
   from {

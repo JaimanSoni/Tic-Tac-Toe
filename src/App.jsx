@@ -3,6 +3,7 @@ import { minimax, checkWinner } from './Algorithms';
 import './App.css';
 import backgroundMusic from "./assets/music.mp3";
 import click from "./assets/Click.mp3";
+import Footer from './Footer';
 
 const EMPTY_BOARD = Array(9).fill(null);
 
@@ -53,6 +54,21 @@ function App() {
   const [player2Score, setPlayer2Score] = useState(0)
   const [audio, setAudio] = useState("off")
   const [playerTurn, setPlayerTurn] = useState("one")
+  const [winnerPosition, setWinnerPosition] = useState(null)
+
+  const initializeGame = () => {
+    setTime(8)
+    setBoard(EMPTY_BOARD);
+    setWinner(null);
+    setIsPlayerTurn(true)
+    setPlayerTurn("one")
+    setPlayerScore(0)
+    setMachineScore(0)
+    setGameOver(false)
+    setPlayer1Score(0)
+    setPlayer2Score(0)
+    setWinnerPosition(null)
+  }
 
   const audioRef = useRef(new Audio(backgroundMusic));
 
@@ -97,17 +113,16 @@ function App() {
     };
   }, []);
 
+ 
+
 
   const changePage = (type) => {
     if (type == "multiplayer") {
 
       playAudio()
-      setPlayer1Score(0)
-      setPlayer2Score(0)
-      setWinner(null)
       setGameOver(false)
-      setCurrentPage("Multiplayer")
       initializeGame()
+      setCurrentPage("Multiplayer")
     }
     else if (type == "singleplayer") {
       playAudio()
@@ -128,10 +143,10 @@ function App() {
           setTime(timer - 1);
         } else {
           if (!winner) {
-            if(currentPage == "Game"){
+            if (currentPage == "Game") {
               setWinner(isPlayerTurn ? "O" : "X");
             }
-            else if(currentPage == "Multiplayer"){
+            else if (currentPage == "Multiplayer") {
               setWinner(playerTurn == "two" ? "X" : "O");
             }
           }
@@ -176,15 +191,7 @@ function App() {
     }
   }, [winner])
 
-  const initializeGame = () => {
-
-    setTime(8)
-    setBoard(EMPTY_BOARD);
-    setPlayerTurn("one")
-    setWinner(null);
-    setPlayer1Score(0)
-    setPlayer2Score(0)
-  }
+ 
 
   const playAudio = () => {
     if (audio !== "off") {
@@ -202,9 +209,10 @@ function App() {
     setBoard(newBoard);
 
     const gameResult = checkWinner(newBoard);
-    if (gameResult) {
+    if (gameResult[0]) {
       setTime(0)
-      setWinner(gameResult);
+      setWinnerPosition(gameResult[1])
+      setWinner(gameResult[0]);
       return;
     }
     setTime(8)
@@ -239,9 +247,11 @@ function App() {
       setPlayerTurn("one")
     }
     const gameResult = checkWinner(newBoard);
-    if (gameResult) {
+    if (gameResult[0]) {
       setTime(0)
-      setWinner(gameResult);
+      setWinnerPosition(gameResult[1])
+
+      setWinner(gameResult[0]);
       return;
     }
 
@@ -263,13 +273,16 @@ function App() {
         const computerMove = getComputerMove(board, difficulty);
         if (computerMove !== undefined) {
           const newBoard = [...board];
+          playAudio()
           newBoard[computerMove] = 'O';
           setBoard(newBoard);
 
           const gameResult = checkWinner(newBoard);
-          if (gameResult) {
+          if (gameResult[0]) {
             setTime(0)
-            setWinner(gameResult);
+            setWinnerPosition(gameResult[1])
+
+            setWinner(gameResult[0]);
           } else {
             setTime(8)
             setIsPlayerTurn(true);
@@ -281,6 +294,10 @@ function App() {
 
   return (
     <>
+      <div className='relative'>
+
+        <Footer />
+      </div>
       {
         currentPage == "Home"
           ?
@@ -341,12 +358,7 @@ function App() {
                   <div className='flex flex-col gap-[40px] pt-[10vh]'>
                     <button onClick={() => {
                       playAudio()
-                      resetGame()
-                      setPlayerScore(0)
-                      setMachineScore(0)
-                      setWinner(null)
-                      setGameOver(false)
-                      setTime(8)
+                      initializeGame()
                       setCurrentPage("Game")
                       setDifficulty("Easy")
                     }}
@@ -355,12 +367,7 @@ function App() {
                     </button>
                     <button onClick={() => {
                       playAudio()
-                      resetGame()
-                      setPlayerScore(0)
-                      setMachineScore(0)
-                      setWinner(null)
-                      setTime(8)
-                      setGameOver(false)
+                      initializeGame()
                       setCurrentPage("Game")
                       setDifficulty("Medium")
                     }} className='home-btn text-[#607AAD]'>
@@ -368,12 +375,7 @@ function App() {
                     </button>
                     <button onClick={() => {
                       playAudio()
-                      resetGame()
-                      setGameOver(false)
-                      setPlayerScore(0)
-                      setMachineScore(0)
-                      setWinner(null)
-                      setTime(8)
+                      initializeGame()
                       setCurrentPage("Game")
                       setDifficulty("Hard")
                     }} className='home-btn text-[#607AAD]'>
@@ -472,22 +474,52 @@ function App() {
 
                       <div className=" w-[350px] gap-y-[10px] flex-wrap flex justify-between  items-center">
                         {board.map((cell, i) => (
-                          <div key={i} onClick={() => {
+                          winner == null ?
+                            <div key={i} onClick={() => {
 
-                            handleMultiplayer(i)
+                              handleMultiplayer(i)
 
-                          }} class={`${cell != null ? "box-after" : "box-before"}`}>
-                            {
-                              cell == "X" ?
-                                <img src="X.png" className='img' alt="" />
-                                :
-                                cell == "O"
-                                  ?
-                                  <img src="O.png" className='img' alt="" />
+                            }} class={`${cell != null ? "box-after" : "box-before"}`}>
+                              {
+                                cell == "X" ?
+                                  <img src="X.png" className='img' alt="" />
                                   :
-                                  null
-                            }
-                          </div>
+                                  cell == "O"
+                                    ?
+                                    <img src="O.png" className='img' alt="" />
+                                    :
+                                    null
+
+
+                              }
+                            </div>
+                            :
+                            <div key={i} onClick={() => {
+
+                              handleMultiplayer(i)
+
+                            }} class={`${cell != null && winnerPosition.includes(i)
+                                ?
+                                cell == "X" ?
+                                  "box-after-win-X"
+                                  :
+                                  "box-after-win-O"
+                                :
+                                cell != null ? "box-after" : "box-before"
+                              }`}>
+                              {
+                                cell == "X" ?
+                                  <img src="X.png" className='img' alt="" />
+                                  :
+                                  cell == "O"
+                                    ?
+                                    <img src="O.png" className='img' alt="" />
+                                    :
+                                    null
+
+
+                              }
+                            </div>
                         ))}
                       </div>
                     </div>
@@ -586,22 +618,54 @@ function App() {
 
                         <div className=" w-[350px] gap-y-[10px] flex-wrap flex justify-between  items-center">
                           {board.map((cell, i) => (
-                            <div key={i} onClick={() => {
-                              if (isPlayerTurn) {
-                                handleClick(i)
-                              }
-                            }} class={`${cell != null ? "box-after" : "box-before"}`}>
-                              {
-                                cell == "X" ?
-                                  <img src="X.png" className='img' alt="" />
-                                  :
-                                  cell == "O"
-                                    ?
-                                    <img src="O.png" className='img' alt="" />
+                            winner == null ?
+                              <div key={i} onClick={() => {
+                                if (isPlayerTurn) {
+
+                                  handleClick(i)
+                                }
+
+                              }} class={`${cell != null ? "box-after" : "box-before"}`}>
+                                {
+                                  cell == "X" ?
+                                    <img src="X.png" className='img' alt="" />
                                     :
-                                    null
-                              }
-                            </div>
+                                    cell == "O"
+                                      ?
+                                      <img src="O.png" className='img' alt="" />
+                                      :
+                                      null
+
+
+                                }
+                              </div>
+                              :
+                              <div key={i} onClick={() => {
+
+                                handleClick(i)
+
+                              }} class={`${cell != null && winner != "Tie" && winnerPosition.includes(i)
+                                  ?
+                                  cell == "X" ?
+                                    "box-after-win-X"
+                                    :
+                                    "box-after-win-O"
+                                  :
+                                  cell != null ? "box-after" : "box-before"
+                                }`}>
+                                {
+                                  cell == "X" ?
+                                    <img src="X.png" className='img' alt="" />
+                                    :
+                                    cell == "O"
+                                      ?
+                                      <img src="O.png" className='img' alt="" />
+                                      :
+                                      null
+
+
+                                }
+                              </div>
                           ))}
                         </div>
                       </div>

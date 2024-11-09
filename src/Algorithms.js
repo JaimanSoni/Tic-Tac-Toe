@@ -12,15 +12,17 @@ const checkWinner = (board) => {
 
     for (let [a, b, c] of lines) {
         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            return board[a];
+            
+            return [board[a], [a, b, c]];
         }
     }
 
-    return board.includes(null) ? null : 'Tie';
+    return [board.includes(null) ? null : 'Tie'];
 };
 
 const minimax = (board, isMaximizing) => {
-    const winner = checkWinner(board);
+    let winner = checkWinner(board);
+    winner = winner[0]
     if (winner === 'O') return 1;
     if (winner === 'X') return -1;
     if (winner === 'Tie') return 0;
